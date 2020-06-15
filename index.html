@@ -9,10 +9,10 @@
 img{
     position:absolute
 }
-#rightSide {
- left: 500px; 
+#rightside {
+left: 500px; 
 border-left: 1px solid aqua; 
-position:absolute;
+
 }
 div{
     position: absolute;
@@ -29,49 +29,65 @@ h1,h2{
 
 </head>
 
-<body id ="theBody">
-<div id="rightSide"></div>
-<div id="leftSide"></div>
+<body id="theBody">
+<div id="leftside"></div>
+<div id="rightside"></div>
 
 <script type="text/javascript">
 
-var numberOfFaces= 5;
-var theLeftSide = document.getElementById("leftSide");
-var theRightSide = document.getElementById("rightSide");
-var theBody=document.getElementById("theBody");
+var numberOfFaces = 5;
 
-function generatefaces() {
-    for (var i=1; i<=numberOfFaces; i++){
-var Image=document.createElement("img");
-Image.src="https://learn.nucamp.co/pluginfile.php/783/mod_page/content/9/smile.png";
-var randomNumberLeft=Math.floor(Math.random()*400);
-var randomNumberTop=Math.floor(Math.random()*400);
-Image.style.top=randomNumberTop + "px";
-Image.style.left=randomNumberLeft + "px";
-theLeftSide.appendChild(Image);
+function generateFaces() {
+
+  var leftSide = document.getElementById("leftside");
+  var rightSide = document.getElementById("rightside");
+  var face = "http://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";
+
+  for (var i = 0; i < numberOfFaces; i++) {
+    var position_x = Math.floor((Math.random() * 400) + 1);
+    var position_y = Math.floor((Math.random() * 400) + 1);
+    var img = document.createElement("img");
+    img.setAttribute("src", face);
+    img.style.top = position_y + "px";
+    img.style.left = position_x + "px";
+    leftSide.appendChild(img);
+  }
+
+  var leftSideImages = leftSide.cloneNode(true);
+  leftSideImages.removeChild(leftSideImages.lastChild);
+  rightSide.appendChild(leftSideImages);
+
+  var theBody =
+    document.getElementsByTagName("body")[0];
+
+  leftSide.lastChild.onclick =
+    function nextLevel(event) {
+      event.stopPropagation();
+      numberOfFaces += 5;
+      while (leftSide.firstChild) {
+        leftSide.removeChild(leftSide.firstChild);
+      }
+      while (rightSide.firstChild) {
+        rightSide.removeChild(rightSide.firstChild);
+      }
+      generateFaces();
+    };
+
+  theBody.onclick = function gameOver() {
+    alert("Game Over");
+    theBody.onclick = null;
+    leftSide.lastChild.onclick - null;
+    while (leftSide.firstChild) {
+      leftSide.removeChild(leftSide.firstChild);
+    }
+    while (rightSide.firstChild) {
+      rightSide.removeChild(rightSide.firstChild);
+    }
+    numberOfFaces = 5;
+    generateFaces();
+  }
 }
-
-var leftSideImages=theLeftSide.cloneNode(true);
-theLeftSide.lastChild.onclick=function nextLevel(event){
-   event.stopPropagation();
-   while(theLeftSide.firstChild)
-   {theLeftSide.removeChild(theLeftSide.firstChild);}
-
-   while(theRightSide.firstChild)
-   {theRightSide.removeChild(theRightSide.firstChild);}
-   numberOfFaces += 5;
-   generatefaces(); };
-
-
-theBody.onclick = function gameOver() {
-   alert("Game Over!");
-   theBody.onclick = null;
-   theLeftSide.lastChild.onclick = null;
-};
-leftSideImages.removeChild(leftSideImages.lastChild);
-theRightSide.appendChild(leftSideImages);
-}
-window.onload=generatefaces();
+generateFaces();
 
 
 </script>
